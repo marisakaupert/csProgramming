@@ -5,6 +5,7 @@ from ucb import main, trace, interact
 
 GOAL_SCORE = 100  # The goal of Hog is to score 100 points.
 
+
 ######################
 # Phase 1: Simulator #
 ######################
@@ -20,9 +21,16 @@ def roll_dice(num_rolls, dice=six_sided):
     # These assert statements ensure that num_rolls is a positive integer.
     assert type(num_rolls) == int, 'num_rolls must be an integer.'
     assert num_rolls > 0, 'Must roll at least once.'
-    # BEGIN PROBLEM 1
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 1
+
+    total = 0
+    while num_rolls != 0:
+        roll = dice()
+        if roll == 1:
+            return 1
+        else:
+            total += roll
+            num_rolls -= 1
+    return total
 
 
 def free_bacon(score):
@@ -31,9 +39,11 @@ def free_bacon(score):
     score:  The opponent's current score.
     """
     assert score < 100, 'The game should be over.'
-    # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 2
+
+    factor_of_ten = score // 10
+    ones = score - (factor_of_ten * 10)
+    lowest_num = min(factor_of_ten, ones)
+    return 10 - lowest_num
 
 
 def take_turn(num_rolls, opponent_score, dice=six_sided):
@@ -49,9 +59,10 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert num_rolls >= 0, 'Cannot roll a negative number of dice in take_turn.'
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     assert opponent_score < 100, 'The game should be over.'
-    # BEGIN PROBLEM 3
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 3
+    if num_rolls == 0:
+        return free_bacon(opponent_score)
+    else:
+        return roll_dice(num_rolls)
 
 
 def is_swap(score0, score1):
@@ -111,6 +122,7 @@ def say_scores(score0, score1):
     print("Player 0 now has", score0, "and Player 1 now has", score1)
     return say_scores
 
+
 def announce_lead_changes(previous_leader=None):
     """Return a commentary function that announces lead changes.
 
@@ -124,6 +136,7 @@ def announce_lead_changes(previous_leader=None):
     >>> f5 = f4(15, 13)
     Player 0 takes the lead by 2
     """
+
     def say(score0, score1):
         if score0 > score1:
             leader = 0
@@ -134,7 +147,9 @@ def announce_lead_changes(previous_leader=None):
         if leader != None and leader != previous_leader:
             print('Player', leader, 'takes the lead by', abs(score0 - score1))
         return announce_lead_changes(leader)
+
     return say
+
 
 def both(f, g):
     """Return a commentary function that says what f says, then what g says.
@@ -149,8 +164,10 @@ def both(f, g):
     Player 0 now has 6 and Player 1 now has 18
     Player 1 takes the lead by 12
     """
+
     def say(score0, score1):
         return both(f(score0, score1), g(score0, score1))
+
     return say
 
 
@@ -193,8 +210,10 @@ def always_roll(n):
     >>> strategy(99, 99)
     5
     """
+
     def strategy(score, opponent_score):
         return n
+
     return strategy
 
 
