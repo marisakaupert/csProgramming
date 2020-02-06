@@ -40,9 +40,9 @@ def free_bacon(score):
     """
     assert score < 100, 'The game should be over.'
 
-    factor_of_ten = score // 10
-    ones = score - (factor_of_ten * 10)
-    lowest_num = min(factor_of_ten, ones)
+    leftmost_digit = score // 10
+    rightmost_digit = score % 10
+    lowest_num = min(leftmost_digit, rightmost_digit)
     return 10 - lowest_num
 
 
@@ -67,9 +67,29 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
 
 def is_swap(score0, score1):
     """Return whether one of the scores is an integer multiple of the other."""
-    # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 4
+
+    def calculate_swap(score):
+        rightmost_digit = score % 10
+        if score // 10 != 0:
+            while score // 10 != 0:
+                leftmost_digit = score // 10
+                score = leftmost_digit
+        else:
+            leftmost_digit = 0
+
+        if leftmost_digit != 0:
+            total = leftmost_digit * rightmost_digit
+        else:
+            total = rightmost_digit * rightmost_digit
+
+        return total
+
+    score0_swap_total = calculate_swap(score0)
+    score1_swap_total = calculate_swap(score1)
+    if score0_swap_total == score1_swap_total:
+        return True
+    else:
+        return False
 
 
 def other(player):
