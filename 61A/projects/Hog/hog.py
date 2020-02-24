@@ -126,10 +126,22 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     say:        The commentary function to call at the end of the first turn.
     """
     player = 0  # Which player is about to take a turn, 0 (first) or 1 (second)
-    # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 5
-    return score0, score1
+
+    def single_turn(score, opponent_score, num_rolls):
+        score += take_turn(num_rolls, score)
+        if is_swap(score, opponent_score):
+            score = opponent_score
+        return score
+
+    game_over_score = 0
+    while game_over_score < 100:
+        if player == 0:
+            score0 += single_turn(score0, score1, strategy0)
+            game_over_score = score0
+        else:
+            score1 += single_turn(score1, score0, strategy1)
+            game_over_score = score1
+        player = other(player)
 
 
 #######################
